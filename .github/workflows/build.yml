@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install devkitPro pacman bootstrap
+        run: |
+          wget -U "dkp-apt" https://apt.devkitpro.org/install-devkitpro-pacman
+          chmod +x ./install-devkitpro-pacman
+          sudo ./install-devkitpro-pacman
+
+      - name: Install Wii toolchain
+        run: |
+          sudo dkp-pacman -Syu --noconfirm
+          sudo dkp-pacman -S --noconfirm wii-dev
+
+      - name: Set environment
+        run: |
+          echo "DEVKITPRO=/opt/devkitpro" >> "$GITHUB_ENV"
+          echo "DEVKITPPC=/opt/devkitpro/devkitPPC" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: ./scripts/build.sh
+
+      - name: Bundle
+        run: ./scripts/bundle.sh
+
+      - name: Upload bundle artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: udraw-probe-bundle
+          path: |
+            dist/apps/udraw-probe/boot.dol
+            dist/apps/udraw-probe/meta.xml
+            dist/apps/udraw-probe/icon.png
+            dist/udraw-probe.zip

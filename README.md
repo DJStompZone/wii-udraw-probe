@@ -53,3 +53,8 @@ See `TESTING.md` for the short operator guide and what to report back after tryi
 
 - `scripts/build.sh`: clean rebuild using the devkitPro environment
 - `scripts/bundle.sh`: rebuild, copy the app to `dist/apps/udraw-probe/boot.dol`, and create `dist/udraw-probe.zip`
+
+
+## GitHub Actions
+
+A workflow is included at `.github/workflows/build.yml` to build and bundle the app on pushes, pull requests, and manual runs.

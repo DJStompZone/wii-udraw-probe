@@ -10,11 +10,10 @@ cd "$ROOT"
 "$ROOT/scripts/build.sh"
 
 mkdir -p "$APP_DIR"
+rm -f "$APP_DIR/boot.dol" "$APP_DIR/udraw_probe.dol"
 cp -f "$ROOT/udraw_probe.dol" "$APP_DIR/boot.dol"
 
-if [[ -f "$APP_DIR/meta.xml" ]]; then
-  :
-else
+if [[ ! -f "$APP_DIR/meta.xml" ]]; then
   cat > "$APP_DIR/meta.xml" <<'XML'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <app version="1">
