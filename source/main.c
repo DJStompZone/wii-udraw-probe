@@ -1,4 +1,5 @@
 #include <gccore.h>
+#include <ogcsys.h>
 #include <stdio.h>
 
 #include "app.h"
@@ -26,10 +27,8 @@ int main(void) {
     app_init();
 
     while (!app_should_quit()) {
+        printf("\x1b[2J\x1b[H");
         app_update();
-        printf("\x1b[2J");
-        printf("uDraw Probe\n\n");
-        printf("Scaffold build running. Press HOME to exit.\n");
         app_render();
         VIDEO_WaitVSync();
     }
