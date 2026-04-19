@@ -40,7 +40,9 @@ static void print_capture_status(const capture_state_t *capture) {
 
 void ui_render(const probe_state_t *state) {
     printf("uDraw Probe\n");
-    printf("===========\n\n");
+    printf("===========\n");
+    printf("Connect a Wiimote and attach the THQ uDraw tablet.\n");
+    printf("Press + to search for guest Wiimotes if needed.\n\n");
 
     printf("STATUS [%s] %s\n\n", status_badge(state->status), state->status_text);
 
@@ -76,13 +78,14 @@ void ui_render(const probe_state_t *state) {
     printf("\nCAPTURE\n");
     print_capture_status(&state->capture);
 
-    printf("\nBUTTON HINTS\n");
+    printf("\nCONTROLS\n");
     printf("  A      Start/stop capture\n");
     printf("  B      Save capture to SD card\n");
     printf("  1      Clear capture + reset min/max\n");
+    printf("  +      Search for guest Wiimotes\n");
     printf("  HOME   Exit app\n");
 
-    printf("\nHOW TO READ THIS SCREEN\n");
+    printf("\nSTATUS GUIDE\n");
     printf("  LIVE     Real unknown-extension bytes are being used.\n");
     printf("  WAIT     Extension is present, but raw bytes are not exposed yet.\n");
     printf("  FALLBACK Placeholder bytes are shown so decode/UI stays visible.\n");

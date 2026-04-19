@@ -11,7 +11,7 @@ This is the short operator guide for trying the probe on a real Wii with a real 
 
 ## Launching
 
-Load `udraw_probe.dol` with your usual homebrew loader.
+Load `udraw_probe.dol` with your usual homebrew loader. If the Wiimote is not connected yet, try pressing `+` in the app to start a guest-Wiimote search.
 
 ## What to look for
 
@@ -37,6 +37,7 @@ If that happens, please still report exactly what the screen says.
 - `A`: start/stop capture
 - `B`: save capture to `sd:/udraw_probe_capture.txt`
 - `1`: clear capture buffer and reset observed min/max
+- `+`: search for guest Wiimotes
 - `HOME`: exit
 
 ## Suggested first test

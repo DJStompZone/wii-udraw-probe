@@ -37,6 +37,7 @@ That means the remaining uncertainty is now focused on real-hardware verificatio
 - `A`: start/stop capture
 - `B`: save captured samples to `sd:/udraw_probe_capture.txt`
 - `1`: clear capture buffer and observed min/max
+- `+`: search for guest Wiimotes
 - `HOME`: exit
 
 ## Optional SD capture

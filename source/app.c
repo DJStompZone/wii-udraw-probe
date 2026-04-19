@@ -7,6 +7,7 @@
 #include "ui.h"
 
 static int s_should_quit = 0;
+static bool s_is_searching = false;
 static probe_state_t s_probe;
 
 static void handle_controls(void) {
@@ -25,10 +26,19 @@ static void handle_controls(void) {
         capture_clear(&s_probe.capture);
         udraw_stats_reset(&s_probe.stats);
     }
+    if (down & WPAD_BUTTON_PLUS) {
+        if (s_is_searching) {
+            WPAD_StopSearch();
+        } else {
+            WPAD_Search();
+        }
+        s_is_searching = !s_is_searching;
+    }
 }
 
 void app_init(void) {
     WPAD_Init();
+    WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
     probe_init(&s_probe);
 }
 
