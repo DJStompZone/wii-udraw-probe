@@ -6,41 +6,36 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  bundle:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install devkitPro pacman bootstrap
-        run: |
-          wget -U "dkp-apt" https://apt.devkitpro.org/install-devkitpro-pacman
-          chmod +x ./install-devkitpro-pacman
-          sudo ./install-devkitpro-pacman
-
-      - name: Install Wii toolchain
-        run: |
-          sudo dkp-pacman -Syu --noconfirm
-          sudo dkp-pacman -S --noconfirm wii-dev
-
-      - name: Set environment
-        run: |
-          echo "DEVKITPRO=/opt/devkitpro" >> "$GITHUB_ENV"
-          echo "DEVKITPPC=/opt/devkitpro/devkitPPC" >> "$GITHUB_ENV"
-
-      - name: Build
-        run: ./scripts/build.sh
-
-      - name: Bundle
-        run: ./scripts/bundle.sh
-
-      - name: Upload bundle artifacts
+      - name: Upload source bundle inputs
         uses: actions/upload-artifact@v4
         with:
-          name: udraw-probe-bundle
+          name: udraw-probe-source-bundle
           path: |
-            dist/apps/udraw-probe/boot.dol
+            Makefile
+            README.md
+            TESTING.md
+            REVIEW_READY.md
+            source/**
+            include/**
+            scripts/**
             dist/apps/udraw-probe/meta.xml
             dist/apps/udraw-probe/icon.png
-            dist/udraw-probe.zip
+
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: './scripts'
