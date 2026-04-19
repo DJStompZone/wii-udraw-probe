@@ -59,3 +59,6 @@ See `TESTING.md` for the short operator guide and what to report back after tryi
 ## GitHub Actions
 
 A workflow is included at `.github/workflows/build.yml` to build and bundle the app on pushes, pull requests, and manual runs.
+
+
+The bundle script copies `assets/meta.xml` and `assets/icon.png` into the packaged Homebrew app directory during bundling.
