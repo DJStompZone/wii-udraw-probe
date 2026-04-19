@@ -25,6 +25,8 @@ void ui_render(const probe_state_t *state) {
     printf("Raw 6-byte report: %02x %02x %02x %02x %02x %02x\n",
            state->raw_report.bytes[0], state->raw_report.bytes[1], state->raw_report.bytes[2],
            state->raw_report.bytes[3], state->raw_report.bytes[4], state->raw_report.bytes[5]);
+    printf("Raw report source: %s\n",
+           state->status == PROBE_STATUS_RAW_CAPTURED ? "live WPAD expansion bytes" : "placeholder scaffold bytes");
     printf("Decoded pen X: %u\n", state->decoded.pen_x);
     printf("Decoded pen Y: %u\n", state->decoded.pen_y);
     printf("Decoded pen pressure: %u\n", state->decoded.pressure);
@@ -39,7 +41,8 @@ void ui_render(const probe_state_t *state) {
     print_range("Pressure", &state->stats.pressure);
 
     printf("\nNotes:\n");
-    printf("- Current raw path is a scaffold using the WiiBrew/Dolphin report model.\n");
-    printf("- Next step is replacing placeholder report bytes with real extension reads on hardware.\n");
+    printf("- Decode assumptions follow the WiiBrew/Dolphin uDraw 6-byte report model.\n");
+    printf("- If libogc exposes unknown-extension bytes through WPADData.exp, this app now uses them directly.\n");
+    printf("- Otherwise it falls back to placeholder bytes so the decode/UI path remains testable.\n");
     printf("- Press HOME on Wiimote to exit.\n");
 }

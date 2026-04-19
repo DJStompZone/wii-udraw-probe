@@ -11,6 +11,7 @@ typedef enum {
     PROBE_STATUS_NO_EXTENSION,
     PROBE_STATUS_EXTENSION_PRESENT,
     PROBE_STATUS_RAW_FALLBACK,
+    PROBE_STATUS_RAW_CAPTURED,
 } probe_status_t;
 
 typedef struct {
