@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>udraw-probe</name>
+  <coder>djstomp</coder>
+  <version>0.0.1</version>
+  <release_date>20260418224322</release_date>
+  <short_description>Reverse-engineering the Wii uDraw tablet into a proper homebrew input device.</short_description> 
+  <long_description>Controls
+- A: start/stop capture
+- B: save captured samples
+- 1: clear capture buffer and observed min/max
+- HOME: exit
+SD Card capture
+When capture is enabled, the app records up to 512 samples of raw report bytes plus decoded fields in memory. Press B to write them to sd:/udraw_probe_capture.txt for later inspection.</long_description> 
+  <no_ios_reload />
+</app>
