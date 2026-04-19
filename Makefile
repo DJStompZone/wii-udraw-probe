@@ -16,10 +16,14 @@ DESCRIPTION := Wii uDraw GameTablet probe app
 CFILES      := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 OFILES      := $(addprefix $(BUILD)/,$(CFILES:.c=.o))
 HFILES      := $(foreach dir,$(INCLUDES),$(wildcard $(dir)/*.h))
-LIBS        := -logc -lm
+LIBS        := -lwiiuse -lbte -logc -lm
 
-export INCLUDE := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) $(foreach dir,$(LIBOGC_INC),-I$(dir))
+export INCLUDE  := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) $(foreach dir,$(LIBOGC_INC),-I$(dir))
 export LIBPATHS := $(foreach dir,$(LIBOGC_LIB),-L$(dir))
+export MACHDEP  := -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float
+export CFLAGS   := -g -O2 -Wall -Wextra -std=c11 $(MACHDEP)
+export LDFLAGS  := -g $(MACHDEP)
+export ELF2DOL  := $(DEVKITPRO)/tools/bin/elf2dol
 
 all: $(BUILD) $(TARGET).dol
 
@@ -27,10 +31,10 @@ $(BUILD):
 	@mkdir -p $(BUILD)
 
 $(BUILD)/%.o: $(SOURCES)/%.c $(HFILES)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) -MMD -MP $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 $(TARGET).elf: $(OFILES)
-	$(CC) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
+	$(CC) $(OFILES) $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
 
 $(TARGET).dol: $(TARGET).elf
 	$(ELF2DOL) $< $@
@@ -40,5 +44,7 @@ clean:
 
 run: $(TARGET).dol
 	wiiload $(TARGET).dol
+
+-include $(OFILES:.o=.d)
 
 .PHONY: all clean run
