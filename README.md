@@ -22,7 +22,7 @@ make run
 
 ## Current status
 
-This repository contains a probe UI and modular decode layer for the expected uDraw 6-byte report format.
+This repository builds successfully into `udraw_probe.dol` and contains a probe UI and modular decode layer for the expected uDraw 6-byte report format.
 
 Current runtime behavior:
 
