@@ -1,4 +1,8 @@
 build/*
 dist/*
+!dist/apps/
+!dist/apps/udraw-probe/
+!dist/apps/udraw-probe/meta.xml
+!dist/apps/udraw-probe/icon.png
 *.elf
 *.dol

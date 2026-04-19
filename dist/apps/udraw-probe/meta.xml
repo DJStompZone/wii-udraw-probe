@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>uDraw Probe</name>
+  <coder>djstomp</coder>
+  <version>0.0.1</version>
+  <release_date>20260418224322</release_date>
+  <short_description>Probe app for the THQ uDraw GameTablet on Wii.</short_description> 
+  <long_description>Controls
+- A: start/stop capture
+- B: save captured samples to sd:/udraw_probe_capture.txt to sd:/udraw_probe_capture.txt
+- 1: clear capture buffer and observed min/max
+- HOME: exit
+SD Card capture
+When capture is enabled, the app records up to 512 samples of raw report bytes plus decoded fields in memory. Press B to write them to sd:/udraw_probe_capture.txt for later inspection.</long_description> 
+  <no_ios_reload />
+</app>
