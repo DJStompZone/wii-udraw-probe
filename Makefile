@@ -16,7 +16,7 @@ DESCRIPTION := Wii uDraw GameTablet probe app
 CFILES      := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 OFILES      := $(addprefix $(BUILD)/,$(CFILES:.c=.o))
 HFILES      := $(foreach dir,$(INCLUDES),$(wildcard $(dir)/*.h))
-LIBS        := -lwiiuse -lbte -logc -lm
+LIBS        := -lfat -lwiiuse -lbte -logc -lm
 
 export INCLUDE  := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) $(foreach dir,$(LIBOGC_INC),-I$(dir))
 export LIBPATHS := $(foreach dir,$(LIBOGC_LIB),-L$(dir))

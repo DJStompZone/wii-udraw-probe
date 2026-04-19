@@ -30,3 +30,15 @@ Current runtime behavior:
 - If libogc does not expose those bytes on the current stack, the app clearly reports that and falls back to placeholder bytes so the UI and decode path remain visible.
 
 That means the remaining uncertainty is now focused on real-hardware verification: whether `WPADData.exp` for `WPAD_EXP_UNKNOWN` actually contains the raw uDraw payload on console.
+
+
+## Controls
+
+- `A`: start/stop capture
+- `B`: save captured samples to `sd:/udraw_probe_capture.txt`
+- `1`: clear capture buffer and observed min/max
+- `HOME`: exit
+
+## Optional SD capture
+
+When capture is enabled, the app records up to 512 samples of raw report bytes plus decoded fields in memory. Press `B` to write them to `sd:/udraw_probe_capture.txt` for later inspection.

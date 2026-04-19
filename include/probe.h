@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+#include "capture.h"
 #include "udraw.h"
 
 typedef enum {
@@ -22,6 +23,7 @@ typedef struct {
     udraw_raw_report_t raw_report;
     udraw_decoded_report_t decoded;
     udraw_runtime_stats_t stats;
+    capture_state_t capture;
     char status_text[96];
 } probe_state_t;
 

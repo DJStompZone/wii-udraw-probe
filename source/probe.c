@@ -52,6 +52,7 @@ void probe_init(probe_state_t *state) {
     memset(state, 0, sizeof(*state));
     udraw_set_default_id(&state->extension_id);
     udraw_stats_reset(&state->stats);
+    capture_init(&state->capture);
     set_status(state, PROBE_STATUS_INIT, "Initializing WPAD");
 }
 
@@ -89,6 +90,7 @@ void probe_update(probe_state_t *state) {
         set_status(state, PROBE_STATUS_RAW_CAPTURED, "Unknown extension detected, capturing raw WPAD expansion bytes");
         udraw_decode_report(&state->raw_report, &state->decoded);
         udraw_stats_update(&state->stats, &state->decoded);
+        capture_append(&state->capture, &state->raw_report, &state->decoded);
         return;
     }
 
@@ -102,4 +104,5 @@ void probe_update(probe_state_t *state) {
     state->report_valid = true;
     udraw_decode_report(&state->raw_report, &state->decoded);
     udraw_stats_update(&state->stats, &state->decoded);
+    capture_append(&state->capture, &state->raw_report, &state->decoded);
 }

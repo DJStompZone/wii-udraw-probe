@@ -10,6 +10,13 @@ static void print_range(const char *label, const udraw_observed_range_t *range) 
     printf("%s: %u .. %u\n", label, range->min_value, range->max_value);
 }
 
+static void print_capture_status(const capture_state_t *capture) {
+    printf("Capture recording: %s\n", capture->recording ? "ON" : "off");
+    printf("Capture samples: %u / %u\n", capture->sample_count, CAPTURE_MAX_SAMPLES);
+    printf("Capture overflowed: %s\n", capture->overflowed ? "yes" : "no");
+    printf("Last save: %s\n", capture->last_save_status);
+}
+
 void ui_render(const probe_state_t *state) {
     printf("uDraw Probe\n");
     printf("===========\n\n");
@@ -40,9 +47,18 @@ void ui_render(const probe_state_t *state) {
     print_range("Y", &state->stats.y);
     print_range("Pressure", &state->stats.pressure);
 
-    printf("\nNotes:\n");
+    printf("\nCapture\n");
+    print_capture_status(&state->capture);
+
+    printf("\nControls\n");
+    printf("A: start/stop capture\n");
+    printf("B: save capture to SD as udraw_probe_capture.txt\n");
+    printf("1: clear capture buffer and min/max\n");
+    printf("HOME: exit\n");
+
+    printf("\nNotes\n");
     printf("- Decode assumptions follow the WiiBrew/Dolphin uDraw 6-byte report model.\n");
     printf("- If libogc exposes unknown-extension bytes through WPADData.exp, this app now uses them directly.\n");
     printf("- Otherwise it falls back to placeholder bytes so the decode/UI path remains testable.\n");
-    printf("- Press HOME on Wiimote to exit.\n");
+    printf("- SD capture is optional and meant for real-hardware debugging.\n");
 }
