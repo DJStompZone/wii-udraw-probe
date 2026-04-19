@@ -39,3 +39,33 @@ jobs:
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: './scripts'
+
+  build-with-container:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitppc:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        run: |
+          echo "DEVKITPRO=/opt/devkitpro" >> "$GITHUB_ENV"
+          echo "DEVKITPPC=/opt/devkitpro/devkitPPC" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: ./scripts/build.sh
+
+      - name: Bundle
+        run: ./scripts/bundle.sh
+
+      - name: Upload built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: udraw-probe-bundle-built
+          path: |
+            dist/apps/udraw-probe/boot.dol
+            dist/apps/udraw-probe/meta.xml
+            dist/apps/udraw-probe/icon.png
+            dist/udraw-probe.zip
