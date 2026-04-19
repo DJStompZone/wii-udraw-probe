@@ -2,63 +2,94 @@
 
 #include <stdio.h>
 
+static const char *status_badge(probe_status_t status) {
+    switch (status) {
+        case PROBE_STATUS_RAW_CAPTURED:
+            return "LIVE";
+        case PROBE_STATUS_EXTENSION_PRESENT:
+            return "WAIT";
+        case PROBE_STATUS_RAW_FALLBACK:
+            return "FALLBACK";
+        case PROBE_STATUS_NO_WIIMOTE:
+        case PROBE_STATUS_NO_EXTENSION:
+            return "CHECK";
+        case PROBE_STATUS_INIT:
+        default:
+            return "INIT";
+    }
+}
+
 static void print_range(const char *label, const udraw_observed_range_t *range) {
     if (!range->seen) {
-        printf("%s: n/a\n", label);
+        printf("  %-8s n/a\n", label);
         return;
     }
-    printf("%s: %u .. %u\n", label, range->min_value, range->max_value);
+    printf("  %-8s %u .. %u\n", label, range->min_value, range->max_value);
+}
+
+static void print_yes_no(const char *label, int value) {
+    printf("  %-18s %s\n", label, value ? "YES" : "NO");
 }
 
 static void print_capture_status(const capture_state_t *capture) {
-    printf("Capture recording: %s\n", capture->recording ? "ON" : "off");
-    printf("Capture samples: %u / %u\n", capture->sample_count, CAPTURE_MAX_SAMPLES);
-    printf("Capture overflowed: %s\n", capture->overflowed ? "yes" : "no");
-    printf("Last save: %s\n", capture->last_save_status);
+    printf("  Recording          %s\n", capture->recording ? "ON" : "OFF");
+    printf("  Samples            %u / %u\n", capture->sample_count, CAPTURE_MAX_SAMPLES);
+    printf("  Overflowed         %s\n", capture->overflowed ? "YES" : "NO");
+    printf("  Save status        %s\n", capture->last_save_status);
 }
 
 void ui_render(const probe_state_t *state) {
     printf("uDraw Probe\n");
     printf("===========\n\n");
 
-    printf("Status: %s\n", state->status_text);
-    printf("Expected extension ID: %02x %02x %02x %02x %02x %02x\n",
+    printf("STATUS [%s] %s\n\n", status_badge(state->status), state->status_text);
+
+    printf("IDENTITY\n");
+    printf("  Expected ID        %02x %02x %02x %02x %02x %02x\n",
            UDRAW_ID_0, UDRAW_ID_1, UDRAW_ID_2, UDRAW_ID_3, UDRAW_ID_4, UDRAW_ID_5);
-    printf("Observed extension ID: %02x %02x %02x %02x %02x %02x\n",
+    printf("  Observed ID        %02x %02x %02x %02x %02x %02x\n",
            state->extension_id.bytes[0], state->extension_id.bytes[1], state->extension_id.bytes[2],
            state->extension_id.bytes[3], state->extension_id.bytes[4], state->extension_id.bytes[5]);
-    printf("ID matches expected: %s\n\n", state->id_valid ? "yes" : "no");
+    print_yes_no("ID matches", state->id_valid);
 
-    printf("Raw 6-byte report: %02x %02x %02x %02x %02x %02x\n",
+    printf("\nRAW REPORT\n");
+    printf("  Bytes              %02x %02x %02x %02x %02x %02x\n",
            state->raw_report.bytes[0], state->raw_report.bytes[1], state->raw_report.bytes[2],
            state->raw_report.bytes[3], state->raw_report.bytes[4], state->raw_report.bytes[5]);
-    printf("Raw report source: %s\n",
+    printf("  Source             %s\n",
            state->status == PROBE_STATUS_RAW_CAPTURED ? "live WPAD expansion bytes" : "placeholder scaffold bytes");
-    printf("Decoded pen X: %u\n", state->decoded.pen_x);
-    printf("Decoded pen Y: %u\n", state->decoded.pen_y);
-    printf("Decoded pen pressure: %u\n", state->decoded.pressure);
-    printf("Upper pen button: %s\n", state->decoded.upper_button ? "pressed" : "released");
-    printf("Lower pen button: %s\n", state->decoded.lower_button ? "pressed" : "released");
-    printf("Pen in range: %s\n", state->decoded.pen_in_range ? "yes" : "no");
-    printf("Pen lifted: %s\n\n", state->decoded.stylus_lifted ? "yes" : "no");
 
-    printf("Observed runtime min/max\n");
+    printf("\nDECODED\n");
+    printf("  Pen X              %u\n", state->decoded.pen_x);
+    printf("  Pen Y              %u\n", state->decoded.pen_y);
+    printf("  Pressure           %u\n", state->decoded.pressure);
+    printf("  Upper button       %s\n", state->decoded.upper_button ? "PRESSED" : "released");
+    printf("  Lower button       %s\n", state->decoded.lower_button ? "PRESSED" : "released");
+    print_yes_no("Pen in range", state->decoded.pen_in_range);
+    print_yes_no("Pen lifted", state->decoded.stylus_lifted);
+
+    printf("\nOBSERVED MIN/MAX\n");
     print_range("X", &state->stats.x);
     print_range("Y", &state->stats.y);
     print_range("Pressure", &state->stats.pressure);
 
-    printf("\nCapture\n");
+    printf("\nCAPTURE\n");
     print_capture_status(&state->capture);
 
-    printf("\nControls\n");
-    printf("A: start/stop capture\n");
-    printf("B: save capture to SD as udraw_probe_capture.txt\n");
-    printf("1: clear capture buffer and min/max\n");
-    printf("HOME: exit\n");
+    printf("\nBUTTON HINTS\n");
+    printf("  A      Start/stop capture\n");
+    printf("  B      Save capture to SD card\n");
+    printf("  1      Clear capture + reset min/max\n");
+    printf("  HOME   Exit app\n");
 
-    printf("\nNotes\n");
-    printf("- Decode assumptions follow the WiiBrew/Dolphin uDraw 6-byte report model.\n");
-    printf("- If libogc exposes unknown-extension bytes through WPADData.exp, this app now uses them directly.\n");
-    printf("- Otherwise it falls back to placeholder bytes so the decode/UI path remains testable.\n");
-    printf("- SD capture is optional and meant for real-hardware debugging.\n");
+    printf("\nHOW TO READ THIS SCREEN\n");
+    printf("  LIVE     Real unknown-extension bytes are being used.\n");
+    printf("  WAIT     Extension is present, but raw bytes are not exposed yet.\n");
+    printf("  FALLBACK Placeholder bytes are shown so decode/UI stays visible.\n");
+    printf("  CHECK    Connect a Wiimote or extension and try again.\n");
+
+    printf("\nNOTES\n");
+    printf("  Decode assumptions follow the WiiBrew/Dolphin uDraw 6-byte model.\n");
+    printf("  SD capture is optional and intended for real-hardware debugging.\n");
+    printf("  Saved captures go to sd:/udraw_probe_capture.txt\n");
 }

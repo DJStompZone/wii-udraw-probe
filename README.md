@@ -42,3 +42,8 @@ That means the remaining uncertainty is now focused on real-hardware verificatio
 ## Optional SD capture
 
 When capture is enabled, the app records up to 512 samples of raw report bytes plus decoded fields in memory. Press `B` to write them to `sd:/udraw_probe_capture.txt` for later inspection.
+
+
+## Real hardware test guide
+
+See `TESTING.md` for the short operator guide and what to report back after trying the app on a real Wii + uDraw tablet.
