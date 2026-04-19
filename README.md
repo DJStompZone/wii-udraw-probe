@@ -47,3 +47,9 @@ When capture is enabled, the app records up to 512 samples of raw report bytes p
 ## Real hardware test guide
 
 See `TESTING.md` for the short operator guide and what to report back after trying the app on a real Wii + uDraw tablet.
+
+
+## Helper scripts
+
+- `scripts/build.sh`: clean rebuild using the devkitPro environment
+- `scripts/bundle.sh`: rebuild, copy the app to `dist/apps/udraw-probe/boot.dol`, and create `dist/udraw-probe.zip`
